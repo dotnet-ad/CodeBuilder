@@ -34,7 +34,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CodeBuilder\CodeBuilder.csproj">
+    <ProjectReference Include="..\CodeBuilder\Code.Builders.csproj">
       <Project>{EBBB1CFC-CEB3-44F3-83CD-67BDC181E3A9}</Project>
       <Name>Code.Builders</Name>
     </ProjectReference>
