@@ -10,5 +10,10 @@
         public Module Module { get; }
 
         public string Fullname => $"{this.Module.Name}.{this.Name}";
+
+        public override string ToString()
+        {
+            return this.Fullname;
+        }
     }
 }
