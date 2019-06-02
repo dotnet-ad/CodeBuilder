@@ -6,7 +6,7 @@ A set of helper classes for generating code.
 
 Available on NuGet
 
-[![NuGet](https://img.shields.io/nuget/v/Code.Builders?label=NuGet)](https://www.nuget.org/packages/Code.Builders/)
+[![NuGet](https://img.shields.io/nuget/v/Adeniel.Code.Builders?label=NuGet)](https://www.nuget.org/packages/Adeniel.Code.Builders/)
 
 ## Quickstart
 
