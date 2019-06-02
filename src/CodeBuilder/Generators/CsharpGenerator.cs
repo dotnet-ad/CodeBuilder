@@ -263,7 +263,7 @@ namespace CodeBuilder
                         var field = @class.Fields[i];
                         var type = this.GetFullname(field.Type);
 
-                        this.NewLine().Scope().Append(this.Get(field.Access)).Append(" ").Append(this.Get(field.Scope));
+                        this.NewLine().Scope().Append(this.Get(field.Access)).Append(field.IsReadonly ? " readonly" : "").Append(" ").Append(this.Get(field.Scope));
                         this.Append(type).Append(" ").Append(field.Name).Append(";");
                         this.NewLine();
                     }
