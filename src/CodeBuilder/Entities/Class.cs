@@ -2,7 +2,7 @@
 {
     public class Class : Interface
     {
-        public Class(string name, string documentation = null, ScopeModifier scope = ScopeModifier.Instance, AccessModifier access = AccessModifier.Public, ImplementationModifier implementation = ImplementationModifier.SingleFile, IType parent = null, Constructor[] constructors = null, Field[] fields = null, Event[] events = null, Property[] properties = null, IType[] innerTypes = null, Method[] methods = null, IType[] interfaces = null) : base(name, documentation, access, events, properties, methods, interfaces)
+        public Class(string name, string documentation = null, ScopeModifier scope = ScopeModifier.Instance, AccessModifier access = AccessModifier.Public, ImplementationModifier implementation = ImplementationModifier.SingleFile, IType parent = null, Constructor[] constructors = null, Field[] fields = null, Event[] events = null, Property[] properties = null, IType[] innerTypes = null, Method[] methods = null, IType[] interfaces = null, Attribute[] attributes = null) : base(name, documentation, access, events, properties, methods, interfaces, attributes)
         {
             this.Parent = parent;
             this.Fields = fields ?? new Field[0];

@@ -18,7 +18,7 @@ namespace CodeBuilder
             scope = 0;
             builder = new StringBuilder();
 
-            if(!this.UsingInsideNamespace)
+            if (!this.UsingInsideNamespace)
             {
                 AppendImports(module.Imports);
             }
@@ -81,6 +81,11 @@ namespace CodeBuilder
         private void Append(Interface interf)
         {
             this.AppendDocumentationSummary(interf.Documentation);
+
+            foreach (var attribute in interf.Attributes)
+            {
+                this.Scope().AppendAttribute(attribute).NewLine();
+            }
 
             this.Scope().Append($"public interface {interf.Name}");
 
@@ -172,7 +177,7 @@ namespace CodeBuilder
 
                         this.NewLine();
 
-                        if(!string.IsNullOrEmpty(method.Documentation))
+                        if (!string.IsNullOrEmpty(method.Documentation))
                         {
                             this.AppendDocumentationSummary(method.Documentation);
 
@@ -187,17 +192,22 @@ namespace CodeBuilder
                             }
                         }
 
+                        foreach (var attribute in method.Attributes)
+                        {
+                            this.Scope().AppendAttribute(attribute).NewLine();
+                        }
+
                         this.Scope().Append(returnType).Append(" ").Append(method.Name).Append("(");
 
                         for (int pi = 0; pi < method.Parameters.Length; pi++)
                         {
                             var parameter = method.Parameters[pi];
 
-                            if (pi > 0) 
+                            if (pi > 0)
                             {
                                 this.Append(", ");
                             }
-                            else if(method.Scope == ScopeModifier.Extension)
+                            else if (method.Scope == ScopeModifier.Extension)
                             {
                                 this.Append("this ");
                             }
@@ -224,6 +234,11 @@ namespace CodeBuilder
             this.AppendDocumentationSummary(@class.Documentation);
 
             this.Scope().Append(this.Get(@class.Access)).Append(" ").Append(this.Get(@class.Implementation)).Append(this.Get(@class.Scope));
+            foreach (var attribute in @class.Attributes)
+            {
+                this.Scope().AppendAttribute(attribute).NewLine();
+            }
+
             this.Append($"class {@class.Name}");
 
             if (@class.Parent != null)
@@ -357,7 +372,7 @@ namespace CodeBuilder
                                 {
                                     if (hasGetter)
                                         this.NewLine();
-                                    
+
                                     this.Scope().Append("set");
                                     this.Append(property.Setter);
                                 }
@@ -383,6 +398,10 @@ namespace CodeBuilder
                         this.NewLine();
 
                         this.AppendMethodComment(method.Documentation, method.ReturnType, method.Parameters);
+                        foreach (var attribute in method.Attributes)
+                        {
+                            this.Scope().AppendAttribute(attribute).NewLine();
+                        }
                         this.Scope().Append(this.Get(method.Access)).Append(this.Get(method.Implementation)).Append(this.Get(method.Override)).Append(" ").Append(this.Get(method.Scope)).Append(this.Get(method.Sync));
                         this.Append(returnType).Append(" ").Append(method.Name);
                         this.AppendParameters(method.Parameters);
@@ -436,15 +455,37 @@ namespace CodeBuilder
 
                 var parameter = parameters[pi];
                 var paramType = this.GetFullname(parameter.Type);
+                 foreach (var attribute in parameter.Attributes)
+                {
+                    this.AppendAttribute(attribute).Append(" ");
+                }
                 this.Append(paramType).Append(" ").Append(parameter.Name);
             }
 
             this.Append(")");
         }
 
+        private CsharpGenerator AppendAttribute(Attribute attribute)
+        {
+            var paramType = this.GetFullname(attribute.Type);
+            this.Append("[");
+            this.Append(paramType);
+
+            if (attribute.Arguments.Any())
+            {
+                this.Append("(");
+                this.Append(string.Join(",", attribute.Arguments));
+                this.Append(")");
+            }
+
+            this.Append("]");
+
+            return this;
+        }
+
         private void Append(Body body)
         {
-            if(body != null && body != Body.None)
+            if (body != null && body != Body.None)
             {
                 if (body.Root is Statement statement)
                 {

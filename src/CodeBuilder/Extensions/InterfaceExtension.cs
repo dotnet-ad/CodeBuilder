@@ -13,7 +13,8 @@ namespace CodeBuilder
                                                                                    events: @this.Events,
                                                                                    properties: @this.Properties,
                                                                                    methods: @this.Methods,
-                                                                                   interfaces: @this.Interfaces);
+                                                                                   interfaces: @this.Interfaces,
+                                                                                   attributes: @this.Attributes);
 
         public static Interface WithAccess(this Interface @this, AccessModifier value) => new Interface(@this.Name,
                                                                                    documentation: @this.Documentation,
@@ -21,7 +22,8 @@ namespace CodeBuilder
                                                                                    events: @this.Events,
                                                                                    properties: @this.Properties,
                                                                                    methods: @this.Methods,
-                                                                                   interfaces: @this.Interfaces);
+                                                                                   interfaces: @this.Interfaces,
+                                                                                   attributes: @this.Attributes);
 
 
         public static Interface WithProperty(this Interface @this, Property value) => new Interface(@this.Name,
@@ -30,7 +32,8 @@ namespace CodeBuilder
                                                                                    events: @this.Events,
                                                                                    properties: @this.Properties.Concat(new[] { value }).ToArray(),
                                                                                    methods: @this.Methods,
-                                                                                                    interfaces: @this.Interfaces);
+                                                                                                    interfaces: @this.Interfaces,
+                                                                                   attributes: @this.Attributes);
 
 
         public static Interface WithEvent(this Interface @this, Event value) => new Interface(@this.Name,
@@ -39,7 +42,8 @@ namespace CodeBuilder
                                                                                    events: @this.Events.Concat(new[] { value }).ToArray(),
                                                                                    properties: @this.Properties,
                                                                                    methods: @this.Methods,
-                                                                                   interfaces: @this.Interfaces);
+                                                                                   interfaces: @this.Interfaces,
+                                                                                   attributes: @this.Attributes);
 
 
         public static Interface WithMethod(this Interface @this, Method value) => new Interface(@this.Name,
@@ -48,7 +52,8 @@ namespace CodeBuilder
                                                                                    events: @this.Events,
                                                                                    properties: @this.Properties,
                                                                                    methods: @this.Methods.Concat(new[] { value }).ToArray(),
-                                                                                   interfaces: @this.Interfaces);
+                                                                                   interfaces: @this.Interfaces,
+                                                                                   attributes: @this.Attributes);
 
 
         public static Interface WithInterface(this Interface @this, IType value) => new Interface(@this.Name,
@@ -57,7 +62,20 @@ namespace CodeBuilder
                                                                                    events: @this.Events,
                                                                                    properties: @this.Properties,
                                                                                    methods: @this.Methods,
-                                                                                   interfaces: @this.Interfaces.Concat(new[] { value }).ToArray());
+                                                                                   interfaces: @this.Interfaces.Concat(new[] { value }).ToArray(),
+                                                                                   attributes: @this.Attributes);
+
+
+
+        public static Interface WithAttribute(this Interface @this, IType type, params String[] arguments) => new Interface(@this.Name,
+                                                                                   documentation: @this.Documentation,
+                                                                                   access: @this.Access,
+                                                                                   events: @this.Events,
+                                                                                   properties: @this.Properties,
+                                                                                   methods: @this.Methods,
+                                                                                   interfaces: @this.Interfaces,
+                                                                                              attributes: @this.Attributes.Concat(new[] { new Attribute(type, arguments) }).ToArray());
+
 
         public static Interface WithProperty(this Interface @this, string name, IType type, Func<Property, Property> initializer = null)
         {
