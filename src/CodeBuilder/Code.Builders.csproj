@@ -9,7 +9,7 @@
     <Version>1.0.0.0</Version>
     <PackageVersion>1.0.0.0</PackageVersion>
     <Authors>Aloïs Deniel</Authors>
-    <PackageId>Code.Builders</PackageId>
+    <PackageId>Adeniel.Code.Builders</PackageId>
     <PackOnBuild>true</PackOnBuild>
     <PackageIconUrl>https://raw.githubusercontent.com/aloisdeniel/CodeBuilder/master/Documentation/Logo.png</PackageIconUrl>
     <NeutralLanguage>en</NeutralLanguage>
