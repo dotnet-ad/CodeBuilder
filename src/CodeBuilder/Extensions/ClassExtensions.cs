@@ -9,6 +9,7 @@ namespace CodeBuilder
 
         public static Class WithName(this Class @this, string value) => new Class(value,
                                                                                    documentation: @this.Documentation,
+                                                                                   innerTypes: @this.InnerTypes,
                                                                                    scope: @this.Scope,
                                                                                    access: @this.Access,
                                                                                    implementation: @this.Implementation,
@@ -22,6 +23,7 @@ namespace CodeBuilder
         
         public static Class WithScope(this Class @this, ScopeModifier value) => new Class(@this.Name,
                                                                                    documentation: @this.Documentation,
+                                                                                   innerTypes: @this.InnerTypes,
                                                                                    scope: value,
                                                                                    access: @this.Access,
                                                                                    implementation: @this.Implementation,
@@ -35,6 +37,7 @@ namespace CodeBuilder
 
         public static Class WithAccess(this Class @this, AccessModifier value) => new Class(@this.Name,
                                                                                    documentation: @this.Documentation,
+                                                                                   innerTypes: @this.InnerTypes,
                                                                                    scope: @this.Scope,
                                                                                    access: value,
                                                                                    implementation: @this.Implementation,
@@ -48,6 +51,7 @@ namespace CodeBuilder
 
         public static Class WithImplementation(this Class @this, ImplementationModifier value) => new Class(@this.Name,
                                                                                    documentation: @this.Documentation,
+                                                                                   innerTypes: @this.InnerTypes,
                                                                                    scope: @this.Scope,
                                                                                    access: @this.Access,
                                                                                    implementation: value,
@@ -61,6 +65,7 @@ namespace CodeBuilder
 
         public static Class WithParent(this Class @this, IType value) => new Class(@this.Name,
                                                                                    documentation: @this.Documentation,
+                                                                                   innerTypes: @this.InnerTypes,
                                                                                    scope: @this.Scope,
                                                                                    access: @this.Access,
                                                                                    implementation: @this.Implementation,
@@ -75,6 +80,7 @@ namespace CodeBuilder
 
         public static Class WithProperty(this Class @this, Property value) => new Class(@this.Name,
                                                                                            documentation: @this.Documentation,
+                                                                                           innerTypes: @this.InnerTypes,
                                                                                            scope: @this.Scope,
                                                                                            access: @this.Access,
                                                                                            implementation: @this.Implementation,
@@ -89,6 +95,7 @@ namespace CodeBuilder
 
         public static Class WithConstructor(this Class @this, Constructor value) => new Class(@this.Name,
                                                                                            documentation: @this.Documentation,
+                                                                                           innerTypes: @this.InnerTypes,
                                                                                            scope: @this.Scope,
                                                                                            access: @this.Access,
                                                                                            implementation: @this.Implementation,
@@ -103,6 +110,7 @@ namespace CodeBuilder
 
         public static Class WithField(this Class @this, Field value) => new Class(@this.Name,
                                                                                            documentation: @this.Documentation,
+                                                                                           innerTypes: @this.InnerTypes,
                                                                                            scope: @this.Scope,
                                                                                            access: @this.Access,
                                                                                            implementation: @this.Implementation,
@@ -114,8 +122,24 @@ namespace CodeBuilder
                                                                                            methods: @this.Methods,
                                                                                            interfaces: @this.Interfaces);
 
+
+        public static Class WithInnerType(this Class @this, Class value) => new Class(@this.Name,
+                                                                                           documentation: @this.Documentation,
+                                                                                           innerTypes: @this.InnerTypes.Concat(new[] { value }).ToArray(),
+                                                                                           scope: @this.Scope,
+                                                                                           access: @this.Access,
+                                                                                           implementation: @this.Implementation,
+                                                                                           parent: @this.Parent,
+                                                                                           constructors: @this.Constructors,
+                                                                                           fields: @this.Fields,
+                                                                                           events: @this.Events,
+                                                                                           properties: @this.Properties,
+                                                                                           methods: @this.Methods,
+                                                                                           interfaces: @this.Interfaces);
+
         public static Class WithEvent(this Class @this, Event value) => new Class(@this.Name,
                                                                                            documentation: @this.Documentation,
+                                                                                           innerTypes: @this.InnerTypes,
                                                                                            scope: @this.Scope,
                                                                                            access: @this.Access,
                                                                                            implementation: @this.Implementation,
@@ -130,6 +154,7 @@ namespace CodeBuilder
 
         public static Class WithMethod(this Class @this, Method value) => new Class(@this.Name,
                                                                                            documentation: @this.Documentation,
+                                                                                           innerTypes: @this.InnerTypes,
                                                                                            scope: @this.Scope,
                                                                                            access: @this.Access,
                                                                                            implementation: @this.Implementation,
@@ -144,6 +169,7 @@ namespace CodeBuilder
 
         public static Class WithInterface(this Class @this, IType value) => new Class(@this.Name,
                                                                                            documentation: @this.Documentation,
+                                                                                           innerTypes: @this.InnerTypes,
                                                                                            scope: @this.Scope,
                                                                                            access: @this.Access,
                                                                                            implementation: @this.Implementation,

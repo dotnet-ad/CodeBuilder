@@ -63,6 +63,21 @@ namespace CodeBuilder
             }
         }
 
+        private void Append(IType type)
+        {
+            switch (type)
+            {
+                case Class c:
+                    this.Append(c);
+                    break;
+                case Interface i:
+                    this.Append(i);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void Append(Interface interf)
         {
             this.AppendDocumentationSummary(interf.Documentation);
@@ -199,6 +214,8 @@ namespace CodeBuilder
 
                     this.AppendLine("#endregion");
                 }
+
+
             });
         }
 
@@ -366,15 +383,16 @@ namespace CodeBuilder
                         this.NewLine();
 
                         this.AppendMethodComment(method.Documentation, method.ReturnType, method.Parameters);
-                        this.Scope().Append(this.Get(method.Access)).Append(this.Get(@class.Implementation)).Append(" ").Append(this.Get(method.Scope)).Append(this.Get(method.Sync));
+                        this.Scope().Append(this.Get(method.Access)).Append(this.Get(method.Implementation)).Append(this.Get(method.Override)).Append(" ").Append(this.Get(method.Scope)).Append(this.Get(method.Sync));
                         this.Append(returnType).Append(" ").Append(method.Name);
                         this.AppendParameters(method.Parameters);
                         this.AppendBody(method.Body);
                     }
 
                     this.NewLine().AppendLine("#endregion");
-
                 }
+
+                @class.InnerTypes.ToList().ForEach((t) => this.Append(t));
             });
         }
 
@@ -502,6 +520,20 @@ namespace CodeBuilder
                     return "protected";
                 default:
                     return "public";
+            }
+        }
+
+        private string Get(OverrideModifier o)
+        {
+            switch (o)
+            {
+                case OverrideModifier.Virtual:
+                    return " virtual";
+
+                case OverrideModifier.Override:
+                    return " protected";
+                default:
+                    return "";
             }
         }
 

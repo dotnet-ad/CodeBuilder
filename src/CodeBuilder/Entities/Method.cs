@@ -2,7 +2,7 @@
 {
     public class Method
     {
-        public Method(string name, string documentation = null, ScopeModifier scope = ScopeModifier.Instance, AccessModifier access = AccessModifier.Public, ImplementationModifier implementation = ImplementationModifier.SingleFile, SyncModifier async = SyncModifier.Synchronous, IType returnType = null, Parameter[] parameters = null, Body body = null)
+        public Method(string name, string documentation = null, ScopeModifier scope = ScopeModifier.Instance, OverrideModifier @override = OverrideModifier.None, AccessModifier access = AccessModifier.Public, ImplementationModifier implementation = ImplementationModifier.SingleFile, SyncModifier async = SyncModifier.Synchronous, IType returnType = null, Parameter[] parameters = null, Body body = null)
         {
             this.Name = name;
             this.Documentation = documentation;
@@ -10,6 +10,7 @@
             this.Body = body;
             this.ReturnType = returnType;
             this.Sync = async;
+            this.Override = @override;
             this.Scope = scope;
             this.Access = access;
             this.Implementation = implementation;
@@ -22,6 +23,8 @@
         public AccessModifier Access { get; }
 
         public SyncModifier Sync { get; }
+
+        public OverrideModifier Override { get; }
 
         public ImplementationModifier Implementation { get; }
 
