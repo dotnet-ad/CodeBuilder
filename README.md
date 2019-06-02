@@ -1,4 +1,4 @@
-# Code.Builder
+# Code.Builders
 
 A set of helper classes for generating code.
 
@@ -6,7 +6,7 @@ A set of helper classes for generating code.
 
 Available on NuGet
 
-[![NuGet](https://img.shields.io/nuget/v/Code.Builder?label=NuGet)](https://www.nuget.org/packages/Code.Builder/)
+[![NuGet](https://img.shields.io/nuget/v/Code.Builders?label=NuGet)](https://www.nuget.org/packages/Code.Builders/)
 
 ## Quickstart
 

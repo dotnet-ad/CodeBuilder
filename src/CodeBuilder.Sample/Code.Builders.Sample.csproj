@@ -36,7 +36,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CodeBuilder\CodeBuilder.csproj">
       <Project>{EBBB1CFC-CEB3-44F3-83CD-67BDC181E3A9}</Project>
-      <Name>CodeBuilder</Name>
+      <Name>Code.Builders</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

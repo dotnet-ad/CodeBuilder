@@ -1,9 +1,9 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeBuilder", "CodeBuilder\CodeBuilder.csproj", "{EBBB1CFC-CEB3-44F3-83CD-67BDC181E3A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Code.Builders", "CodeBuilder\Code.Builders.csproj", "{EBBB1CFC-CEB3-44F3-83CD-67BDC181E3A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeBuilder.Sample", "CodeBuilder.Sample\CodeBuilder.Sample.csproj", "{24ADEB7C-916A-48BC-86F0-4917BABAA57E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Code.Builders.Sample", "CodeBuilder.Sample\Code.Builders.Sample.csproj", "{24ADEB7C-916A-48BC-86F0-4917BABAA57E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
