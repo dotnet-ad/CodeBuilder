@@ -27,7 +27,7 @@ namespace CodeBuilder.Sample
                                 });
 
             var sampleViewModel = new Class("SampleViewModel")
-                                .WithConstructor(x => x.WithParameter<string>("test").WithBody(new Statement("this.test = test;")))
+                                .WithConstructor(x => x.WithBaseInitializers("test", "0").WithParameter<string>("test").WithBody(new Statement("this.test = test;")))
                                 .WithInterface(iViewModel)
                                 .WithField<bool>("test2")
                                 .WithField<string>("test")

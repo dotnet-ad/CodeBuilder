@@ -9,25 +9,36 @@ namespace CodeBuilder
                                                                                      documentation: value,
                                                                                      access: @this.Access,
                                                                                      parameters: @this.Parameters,
+                                                                                     baseInitializers: @this.BaseInitializers,
                                                                                      body: @this.Body);
 
         public static Constructor WithAccess(this Constructor @this, AccessModifier value) => new Constructor(
                                                                                              documentation: @this.Documentation,
                                                                                              access: value,
                                                                                              parameters: @this.Parameters,
+                                                                                             baseInitializers: @this.BaseInitializers,
                                                                                              body: @this.Body);
 
         public static Constructor WithParameter(this Constructor @this, Parameter value) => new Constructor(
                                                                                              documentation: @this.Documentation,
                                                                                              access: @this.Access,
                                                                                              parameters: @this.Parameters.Concat(new[] { value }).ToArray(),
+                                                                                             baseInitializers: @this.BaseInitializers,
                                                                                              body: @this.Body);
 
         public static Constructor WithBody(this Constructor @this, IInstruction value) => new Constructor(
                                                                                      documentation: @this.Documentation,
                                                                                      access: @this.Access,
                                                                                      parameters: @this.Parameters,
+                                                                                     baseInitializers: @this.BaseInitializers,
                                                                                      body: new Body(value));
+
+        public static Constructor WithBaseInitializers(this Constructor @this, params string[] value) => new Constructor(
+        documentation: @this.Documentation,
+        access: @this.Access,
+        parameters: @this.Parameters,
+        baseInitializers: @this.BaseInitializers.Concat(value).ToArray(),
+        body: @this.Body);
 
 
         public static Constructor WithParameter(this Constructor @this, string name, IType type, Func<Parameter, Parameter> initializer = null)

@@ -212,6 +212,11 @@ namespace CodeBuilder
                                 this.Append("this ");
                             }
 
+                            foreach (var attribute in parameter.Attributes)
+                            {
+                                this.Scope().AppendAttribute(attribute).NewLine();
+                            }
+
                             var paramType = this.GetFullname(parameter.Type);
                             this.Append(paramType).Append(" ").Append(parameter.Name);
                         }
@@ -301,6 +306,11 @@ namespace CodeBuilder
                         this.AppendMethodComment(constructor.Documentation, null, constructor.Parameters);
                         this.NewLine().Scope().Append(this.Get(constructor.Access)).Append(" ").Append(@class.Name);
                         this.AppendParameters(constructor.Parameters);
+
+                        if(constructor.BaseInitializers.Any()) {
+                            this.Append($" : base({ string.Join(",", constructor.BaseInitializers)})");
+                        }
+
                         this.AppendBody(constructor.Body);
                     }
 
