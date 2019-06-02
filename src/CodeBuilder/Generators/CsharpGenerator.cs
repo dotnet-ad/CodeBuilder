@@ -531,7 +531,7 @@ namespace CodeBuilder
                     return " virtual";
 
                 case OverrideModifier.Override:
-                    return " protected";
+                    return " override";
                 default:
                     return "";
             }
