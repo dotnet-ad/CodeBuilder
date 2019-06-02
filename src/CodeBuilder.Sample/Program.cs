@@ -12,7 +12,9 @@ namespace CodeBuilder.Sample
             var iViewModel = new Interface("IViewModel")
                                 .WithInterface<INotifyPropertyChanged>()
                                 .WithProperty<string>("Test", x => x.WithDocumentation("A test property."))
-                                .WithEvent("Updated")
+                                .WithProperty<string>("Test2", x => x.WithDocumentation("A test property."))
+                                .WithEvent("Updated", initializer: x => x.WithDocumentation("When updated"))
+                                .WithEvent("Updated2")
                                 .WithMethod<Task>("UpdateAsync", x =>
                                 {
                                     return x.WithParameter<DateTime>("date", p => p.WithDocumentation("The last updated date"))
@@ -21,12 +23,13 @@ namespace CodeBuilder.Sample
                                 });
 
             var sampleViewModel = new Class("SampleViewModel")
+                                .WithConstructor(x => x.WithParameter<string>("test").WithBody(new Statement("this.test = test;")))
                                 .WithInterface(iViewModel)
                                 .WithField<bool>("test2")
                                 .WithField<string>("test")
                                 .WithEvent<PropertyChangedEventHandler>("PropertyChanged")
-                                .WithEvent("Updated")
-                                .WithProperty<int>("AutoProperty", x => x.WithAutoGetter().WithAutoSetter())
+                                .WithEvent("Updated", initializer: x => x.WithDocumentation("When updated"))
+                                .WithAutoProperty<int>("AutoProperty")
                                 .WithProperty<string>("Test", x => 
                                 {
                                     return x.WithFieldGetter("test")
@@ -39,8 +42,7 @@ namespace CodeBuilder.Sample
                                             .WithParameter<CancellationToken>("token")
                                             .WithDocumentation("Updates the current state of the view model.")
                                             .WithBody(new Block(new Statement("await Task.Delay(3);"), new Statement("this.Updated?.Invoke(this, System.EventArgs.Empty);")));
-                                })
-                                .WithMethod<string>("Test", x => x.WithImplementation(ImplementationModifier.MultiFiles));
+                                });
 
             var module = new Module("CodeBuilder.Sample").WithTypes(iViewModel,sampleViewModel)
                                                          .WithImport(Modules.ThreadingTasks)

@@ -5,11 +5,9 @@ namespace CodeBuilder
 {
     public class CsharpGenerator : ICodeGenerator
     {
-        public CsharpGenerator()
-        {
-        }
-
         public int Indentation { get; set; } = 4;
+
+        public bool UsingInsideNamespace { get; set; } = false;
 
         private int scope;
 
@@ -20,18 +18,19 @@ namespace CodeBuilder
             scope = 0;
             builder = new StringBuilder();
 
-            if(module.Imports.Any())
+            if(!this.UsingInsideNamespace)
             {
-                foreach (var import in module.Imports)
-                {
-                    this.AppendLine("using " + import.Name + ";");
-                }
-                this.NewLine();
+                AppendImports(module.Imports);
             }
 
             this.AppendLine($"namespace {module.Name}");
             this.AppendBlock(() =>
             {
+                if (this.UsingInsideNamespace)
+                {
+                    AppendImports(module.Imports);
+                }
+
                 for (int i = 0; i < module.Types.Length; i++)
                 {
                     if (i > 0) this.NewLine();
@@ -50,6 +49,18 @@ namespace CodeBuilder
 
             return builder.ToString();
 
+        }
+
+        private void AppendImports(Module[] imports)
+        {
+            if (imports.Any())
+            {
+                foreach (var import in imports)
+                {
+                    this.AppendLine("using " + import.Name + ";");
+                }
+                this.NewLine();
+            }
         }
 
         private void Append(Interface interf)
@@ -73,7 +84,13 @@ namespace CodeBuilder
 
             this.AppendBlock(() =>
             {
-                if (interf.Properties.Any())
+                var publicInstanceMethods = interf.Methods.Where(x => x.Scope == ScopeModifier.Instance && x.Access == AccessModifier.Public).ToArray();
+
+                var hasEvents = interf.Events.Any();
+                var hasProperties = interf.Properties.Any();
+                var hasMethods = publicInstanceMethods.Any();
+
+                if (hasProperties)
                 {
                     this.AppendLine("#region Properties");
 
@@ -97,6 +114,7 @@ namespace CodeBuilder
                         }
 
                         this.Append(" }");
+                        this.NewLine();
                     }
 
                     this.NewLine();
@@ -104,8 +122,10 @@ namespace CodeBuilder
                     this.AppendLine("#endregion");
                 }
 
-                if (interf.Events.Any())
+                if (hasEvents)
                 {
+                    if (hasProperties) this.NewLine();
+
                     this.AppendLine("#region Events");
 
                     for (int i = 0; i < interf.Events.Length; i++)
@@ -116,6 +136,7 @@ namespace CodeBuilder
                         this.NewLine();
                         this.AppendDocumentationSummary(ev.Documentation);
                         this.Scope().Append("event ").Append(handlerType).Append(" ").Append(ev.Name).Append(";");
+                        this.NewLine();
                     }
 
                     this.NewLine();
@@ -123,9 +144,10 @@ namespace CodeBuilder
                     this.AppendLine("#endregion");
                 }
 
-                var publicInstanceMethods = interf.Methods.Where(x => x.Scope == ScopeModifier.Instance && x.Access == AccessModifier.Public).ToArray();
-                if (publicInstanceMethods.Any())
+                if (hasMethods)
                 {
+                    if (hasProperties || hasEvents) this.NewLine();
+
                     this.AppendLine("#region Methods");
 
                     for (int i = 0; i < publicInstanceMethods.Length; i++)
@@ -170,6 +192,7 @@ namespace CodeBuilder
                         }
 
                         this.Append(");");
+                        this.NewLine();
                     }
 
                     this.NewLine();
@@ -208,6 +231,7 @@ namespace CodeBuilder
 
             this.AppendBlock(() =>
             {
+                var hasConstructors = @class.Constructors.Any();
                 var hasFields = @class.Fields.Any();
                 var hasEvents = @class.Events.Any();
                 var hasProperties = @class.Properties.Any();
@@ -223,7 +247,29 @@ namespace CodeBuilder
                         var type = this.GetFullname(field.Type);
 
                         this.NewLine().Scope().Append(this.Get(field.Access)).Append(" ").Append(this.Get(field.Scope));
-                        this.Append(type).Append(" ").Append(field.Name).Append(";").NewLine();
+                        this.Append(type).Append(" ").Append(field.Name).Append(";");
+                        this.NewLine();
+                    }
+
+                    this.NewLine();
+
+                    this.AppendLine("#endregion");
+                }
+
+                if (hasConstructors)
+                {
+                    if (hasFields) this.NewLine();
+
+                    this.AppendLine("#region Constructors");
+
+                    for (int i = 0; i < @class.Constructors.Length; i++)
+                    {
+                        var constructor = @class.Constructors[i];
+
+                        this.AppendMethodComment(constructor.Documentation, null, constructor.Parameters);
+                        this.NewLine().Scope().Append(this.Get(constructor.Access)).Append(" ").Append(@class.Name);
+                        this.AppendParameters(constructor.Parameters);
+                        this.AppendBody(constructor.Body);
                     }
 
                     this.NewLine();
@@ -233,7 +279,7 @@ namespace CodeBuilder
 
                 if (hasEvents)
                 {
-                    if (hasFields) this.NewLine();
+                    if (hasConstructors || hasFields) this.NewLine();
 
                     this.AppendLine("#region Events");
 
@@ -244,7 +290,7 @@ namespace CodeBuilder
 
                         this.NewLine();
                         this.AppendDocumentationSummary(ev.Documentation);
-                        this.NewLine().Scope().Append(this.Get(ev.Access)).Append(" event ").Append(this.Get(ev.Scope));
+                        this.Scope().Append(this.Get(ev.Access)).Append(" event ").Append(this.Get(ev.Scope));
                         this.Append(handlerType).Append(" ").Append(ev.Name).Append(";").NewLine();
                     }
 
@@ -255,7 +301,7 @@ namespace CodeBuilder
 
                 if (hasProperties)
                 {
-                    if (hasEvents || hasFields) this.NewLine();
+                    if (hasConstructors || hasEvents || hasFields) this.NewLine();
 
                     this.AppendLine("#region Properties");
 
@@ -308,7 +354,7 @@ namespace CodeBuilder
 
                 if (hasMethods)
                 {
-                    if (hasFields || hasProperties) this.NewLine();
+                    if (hasConstructors || hasFields || hasProperties) this.NewLine();
 
                     this.AppendLine("#region Methods");
 
@@ -319,50 +365,63 @@ namespace CodeBuilder
 
                         this.NewLine();
 
-                        if (!string.IsNullOrEmpty(method.Documentation))
-                        {
-                            this.AppendDocumentationSummary(method.Documentation);
-
-                            if (method.ReturnType != null)
-                            {
-                                this.AppendCommentLine($"<returns>The {method.ReturnType.Name} result.</returns>");
-                            }
-
-                            foreach (var parameter in method.Parameters)
-                            {
-                                this.AppendCommentLine($"<param name=\"{parameter.Name}\">{parameter.Documentation}</param>");
-                            }
-                        }
-
-                        this.Scope().Append(this.Get(method.Access)).Append(" ").Append(this.Get(method.Scope)).Append(this.Get(method.Sync));
-                        this.Append(returnType).Append(" ").Append(method.Name).Append("(");
-
-                        for (int pi = 0; pi < method.Parameters.Length; pi++)
-                        {
-                            if (pi > 0) this.Append(", ");
-
-                            var parameter = method.Parameters[pi];
-                            var paramType = this.GetFullname(parameter.Type);
-                            this.Append(paramType).Append(" ").Append(parameter.Name);
-                        }
-
-                        this.Append(")");
-
-                        if (method.Body != null && method.Body != Body.None)
-                        {
-                            this.NewLine().Append(method.Body);
-                        }
-                        else
-                        {
-                            this.Append(" {}");
-                            this.NewLine();
-                        }
+                        this.AppendMethodComment(method.Documentation, method.ReturnType, method.Parameters);
+                        this.Scope().Append(this.Get(method.Access)).Append(this.Get(@class.Implementation)).Append(" ").Append(this.Get(method.Scope)).Append(this.Get(method.Sync));
+                        this.Append(returnType).Append(" ").Append(method.Name);
+                        this.AppendParameters(method.Parameters);
+                        this.AppendBody(method.Body);
                     }
 
                     this.NewLine().AppendLine("#endregion");
 
                 }
             });
+        }
+
+        private void AppendMethodComment(string documentation, IType returnType, Parameter[] parameters)
+        {
+            if (!string.IsNullOrEmpty(documentation))
+            {
+                this.AppendDocumentationSummary(documentation);
+
+                if (returnType != null)
+                {
+                    this.AppendCommentLine($"<returns>The {returnType.Name} result.</returns>");
+                }
+
+                foreach (var parameter in parameters)
+                {
+                    this.AppendCommentLine($"<param name=\"{parameter.Name}\">{parameter.Documentation}</param>");
+                }
+            }
+        }
+
+        private void AppendBody(Body body)
+        {
+            if (body != null && body != Body.None)
+            {
+                this.Append(body);
+            }
+            else
+            {
+                this.Append(" {}");
+            }
+        }
+
+        private void AppendParameters(Parameter[] parameters)
+        {
+            this.Append("(");
+
+            for (int pi = 0; pi < parameters.Length; pi++)
+            {
+                if (pi > 0) this.Append(", ");
+
+                var parameter = parameters[pi];
+                var paramType = this.GetFullname(parameter.Type);
+                this.Append(paramType).Append(" ").Append(parameter.Name);
+            }
+
+            this.Append(")");
         }
 
         private void Append(Body body)
@@ -391,7 +450,7 @@ namespace CodeBuilder
 
             else if (instruction is Statement statement)
             {
-                this.Append(statement);
+                this.Append(statement).NewLine();
             }
         }
 
@@ -402,7 +461,6 @@ namespace CodeBuilder
                 foreach (var instruction in block.Instructions)
                 {
                     this.Scope().Append(instruction);
-                    this.NewLine();
                 }
             });
             return this;

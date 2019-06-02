@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+
 namespace CodeBuilder
 {
     public static class MethodExtensions

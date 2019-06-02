@@ -1,74 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+    
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EBBB1CFC-CEB3-44F3-83CD-67BDC181E3A9}</ProjectGuid>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <UseMSBuildEngine>true</UseMSBuildEngine>
-    <OutputType>Library</OutputType>
-    <RootNamespace>CodeBuilder</RootNamespace>
-    <AssemblyName>CodeBuilder</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <Product>$(AssemblyName) ($(TargetFramework))</Product>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
+    <Version>1.0.0.0</Version>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <Authors>Aloïs Deniel</Authors>
+    <PackageId>Code.Builder</PackageId>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageIconUrl>https://raw.githubusercontent.com/aloisdeniel/CodeBuilder/master/Documentation/Logo.png</PackageIconUrl>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageLicenseUrl>https://github.com/aloisdeniel/CodeBuilder/blob/master/LICENSE</PackageLicenseUrl>
+    <Owners>Aloïs Deniel</Owners>
+    <PackageProjectUrl>https://github.com/aloisdeniel/CodeBuilder</PackageProjectUrl>
+    <Summary>An ea</Summary>
+    <PackageTags>code, build, csharp</PackageTags>
+    <Title>Code.Builder</Title>
+    <Description>A set of helper classes for generating code.</Description>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Entities\Class.cs" />
-    <Compile Include="Entities\Interface.cs" />
-    <Compile Include="Entities\Property.cs" />
-    <Compile Include="Entities\Types\IType.cs" />
-    <Compile Include="Entities\Method.cs" />
-    <Compile Include="Entities\Parameter.cs" />
-    <Compile Include="Entities\Field.cs" />
-    <Compile Include="Entities\Instructions\IInstruction.cs" />
-    <Compile Include="Entities\Types\BaseType.cs" />
-    <Compile Include="Generators\ICodeGenerator.cs" />
-    <Compile Include="Generators\CsharpGenerator.cs" />
-    <Compile Include="Entities\Module.cs" />
-    <Compile Include="Entities\Types\Type.cs" />
-    <Compile Include="Entities\Types\GenericType.cs" />
-    <Compile Include="Extensions\ModuleExtensions.cs" />
-    <Compile Include="Extensions\ClassExtensions.cs" />
-    <Compile Include="Entities\Modifiers\AccessModifier.cs" />
-    <Compile Include="Entities\Modifiers\ScopeModifier.cs" />
-    <Compile Include="Entities\Body.cs" />
-    <Compile Include="Entities\Instructions\Block.cs" />
-    <Compile Include="Entities\Instructions\Statement.cs" />
-    <Compile Include="Entities\Modifiers\ImplementationModifier.cs" />
-    <Compile Include="Extensions\FieldExtensions.cs" />
-    <Compile Include="Extensions\PropertyExtensions.cs" />
-    <Compile Include="Extensions\InterfaceExtension.cs" />
-    <Compile Include="Extensions\MethodExtensions.cs" />
-    <Compile Include="Entities\Types\Modules.cs" />
-    <Compile Include="Entities\Modifiers\SyncModifier.cs" />
-    <Compile Include="Entities\Event.cs" />
-    <Compile Include="Extensions\EventExtensions.cs" />
-    <Compile Include="Extensions\TypeExtensions.cs" />
-    <Compile Include="Extensions\ParameterExtensions.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Entities\" />
-    <Folder Include="Entities\Types\" />
-    <Folder Include="Entities\Instructions\" />
-    <Folder Include="Generators\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="Entities\Modifiers\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+
 </Project>

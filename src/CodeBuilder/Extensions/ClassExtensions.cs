@@ -13,6 +13,7 @@ namespace CodeBuilder
                                                                                    access: @this.Access,
                                                                                    implementation: @this.Implementation,
                                                                                    parent: @this.Parent,
+                                                                                   constructors: @this.Constructors,
                                                                                    fields: @this.Fields,
                                                                                    events: @this.Events,
                                                                                    properties: @this.Properties,
@@ -25,6 +26,7 @@ namespace CodeBuilder
                                                                                    access: @this.Access,
                                                                                    implementation: @this.Implementation,
                                                                                    parent: @this.Parent,
+                                                                                   constructors: @this.Constructors,
                                                                                    fields: @this.Fields,
                                                                                    events: @this.Events,
                                                                                    properties: @this.Properties,
@@ -37,6 +39,7 @@ namespace CodeBuilder
                                                                                    access: value,
                                                                                    implementation: @this.Implementation,
                                                                                    parent: @this.Parent,
+                                                                                   constructors: @this.Constructors,
                                                                                    fields: @this.Fields,
                                                                                    events: @this.Events,
                                                                                    properties: @this.Properties,
@@ -49,6 +52,7 @@ namespace CodeBuilder
                                                                                    access: @this.Access,
                                                                                    implementation: value,
                                                                                    parent: @this.Parent,
+                                                                                   constructors: @this.Constructors,
                                                                                    fields: @this.Fields,
                                                                                    events: @this.Events,
                                                                                    properties: @this.Properties,
@@ -61,6 +65,7 @@ namespace CodeBuilder
                                                                                    access: @this.Access,
                                                                                    implementation: @this.Implementation,
                                                                                    parent: value,
+                                                                                   constructors: @this.Constructors,
                                                                                    fields: @this.Fields,
                                                                                    events: @this.Events,
                                                                                    properties: @this.Properties,
@@ -74,9 +79,24 @@ namespace CodeBuilder
                                                                                            access: @this.Access,
                                                                                            implementation: @this.Implementation,
                                                                                            parent: @this.Parent,
+                                                                                           constructors: @this.Constructors,
                                                                                            fields: @this.Fields,
                                                                                            events: @this.Events,
                                                                                            properties: @this.Properties.Concat(new[] { value }).ToArray(),
+                                                                                           methods: @this.Methods,
+                                                                                        interfaces: @this.Interfaces);
+
+
+        public static Class WithConstructor(this Class @this, Constructor value) => new Class(@this.Name,
+                                                                                           documentation: @this.Documentation,
+                                                                                           scope: @this.Scope,
+                                                                                           access: @this.Access,
+                                                                                           implementation: @this.Implementation,
+                                                                                           parent: @this.Parent,
+                                                                                           constructors: @this.Constructors.Concat(new[] { value }).ToArray(),
+                                                                                           fields: @this.Fields,
+                                                                                           events: @this.Events,
+                                                                                           properties: @this.Properties,
                                                                                            methods: @this.Methods,
                                                                                            interfaces: @this.Interfaces);
 
@@ -87,6 +107,7 @@ namespace CodeBuilder
                                                                                            access: @this.Access,
                                                                                            implementation: @this.Implementation,
                                                                                            parent: @this.Parent,
+                                                                                           constructors: @this.Constructors,
                                                                                            fields: @this.Fields.Concat(new[] { value }).ToArray(),
                                                                                            events: @this.Events,
                                                                                            properties: @this.Properties,
@@ -99,6 +120,7 @@ namespace CodeBuilder
                                                                                            access: @this.Access,
                                                                                            implementation: @this.Implementation,
                                                                                            parent: @this.Parent,
+                                                                                           constructors: @this.Constructors,
                                                                                            fields: @this.Fields,
                                                                                            events: @this.Events.Concat(new[] { value }).ToArray(),
                                                                                            properties: @this.Properties,
@@ -112,6 +134,7 @@ namespace CodeBuilder
                                                                                            access: @this.Access,
                                                                                            implementation: @this.Implementation,
                                                                                            parent: @this.Parent,
+                                                                                           constructors: @this.Constructors,
                                                                                            fields: @this.Fields,
                                                                                            events: @this.Events,
                                                                                            properties: @this.Properties,
@@ -125,6 +148,7 @@ namespace CodeBuilder
                                                                                            access: @this.Access,
                                                                                            implementation: @this.Implementation,
                                                                                            parent: @this.Parent,
+                                                                                           constructors: @this.Constructors,
                                                                                            fields: @this.Fields,
                                                                                            events: @this.Events,
                                                                                            properties: @this.Properties,
@@ -149,6 +173,16 @@ namespace CodeBuilder
                 field = initializer(field);
             }
             return @this.WithField(field);
+        }
+
+        public static Class WithConstructor(this Class @this, Func<Constructor, Constructor> initializer = null)
+        {
+            var constructor = new Constructor();
+            if (initializer != null)
+            {
+                constructor = initializer(constructor);
+            }
+            return @this.WithConstructor(constructor);
         }
 
         public static Class WithEvent(this Class @this, string name, IType type = null, Func<Event, Event> initializer = null)
@@ -204,6 +238,11 @@ namespace CodeBuilder
         public static Class WithProperty<T>(this Class @this, string name, Func<Property, Property> initializer = null)
         {
             return @this.WithProperty(name, typeof(T).ToBuilder(), initializer);
+        }
+
+        public static Class WithAutoProperty<T>(this Class @this, string name, Func<Property, Property> initializer = null)
+        {
+            return @this.WithProperty(name, typeof(T).ToBuilder(), (p) => initializer == null ? p.WithAutoGetter().WithAutoSetter() : initializer(p).WithAutoGetter().WithAutoSetter());
         }
 
         public static Class WithInterface<T>(this Class @this)
